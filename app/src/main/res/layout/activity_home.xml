@@ -7,44 +7,15 @@
     android:fitsSystemWindows="true"
     tools:context="com.chabiio.potecola.ui.HomeActivity">
 
-    <TextView
-        android:fitsSystemWindows="true"
-        android:id="@+id/sheet"
+    <com.chabiio.potecola.ui.widget.RatioRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/large_text"
-        android:padding="16dp"
-        android:background="@color/colorPrimary"
-        android:textColor="#fff"
-        android:elevation="4dp"
-        app:behavior_sheet_hideable="true"
-        app:behavior_sheet_leftHanded="true"
-        app:behavior_sheet_peekSize="200dp"
-        app:layout_behavior="@string/rl_sheet_behavior"/>
-
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:fitsSystemWindows="true"-->
-        <!--android:id="@+id/sheet"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:elevation="4dp"-->
-        <!--app:layout_behavior="@string/rl_sheet_behavior"-->
-        <!--app:behavior_hideable="true">-->
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/large_text"-->
-            <!--android:padding="16dp"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:textColor="#fff" />-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
-
-    <Button
-        android:id="@+id/reset_btn"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="48dp"
-        android:text="reset"/>
+        app:layout_widthRatio="16"
+        app:layout_heightRatio="9">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent" />
+    </com.chabiio.potecola.ui.widget.RatioRelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

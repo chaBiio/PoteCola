@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="SheetBehavior_Layout">
         <attr name="behavior_sheet_peekSize" format="dimension"/>
         <attr name="behavior_sheet_hideable" format="boolean"/>
         <attr name="behavior_sheet_skipCollapsed" format="boolean"/>
         <attr name="behavior_sheet_leftHanded" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioRelativeLayout">
+        <attr name="layout_widthRatio" format="integer"/>
+        <attr name="layout_heightRatio" format="integer"/>
     </declare-styleable>
 </resources>
