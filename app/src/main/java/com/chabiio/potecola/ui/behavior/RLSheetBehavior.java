@@ -1,20 +1,31 @@
-package com.chabiio.potecola.ui.widget;
+package com.chabiio.potecola.ui.behavior;
 
 /**
- * Created by lionm on 2/16/2018.
+ * Created by lionm on 2/17/2018.
  */
 
-import android.os.Build;
-import android.support.design.widget.CoordinatorLayout;
-import android.util.Log;
-import android.view.ViewGroup;
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.ViewCompat;
@@ -25,80 +36,32 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.chabiio.potecola.R;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
 /**
  * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to make it work as
  * a bottom sheet.
  */
-public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
-    /**
-     * Callback for monitoring events about bottom sheets.
-     */
-    public abstract static class TopSheetCallback {
-        /**
-         * Called when the bottom sheet changes its state.
-         *
-         * @param bottomSheet The bottom sheet view.
-         * @param newState    The new state. This will be one of {@link #STATE_DRAGGING},
-         *                    {@link #STATE_SETTLING}, {@link #STATE_EXPANDED},
-         *                    {@link #STATE_COLLAPSED}, or {@link #STATE_HIDDEN}.
-         */
-        public abstract void onStateChanged(@NonNull View bottomSheet, @State int newState);
-        /**
-         * Called when the bottom sheet is being dragged.
-         *
-         * @param bottomSheet The bottom sheet view.
-         * @param slideOffset The new offset of this bottom sheet within [-1,1] range. Offset
-         *                    increases as this bottom sheet is moving upward. From 0 to 1 the sheet
-         *                    is between collapsed and expanded states and from -1 to 0 it is
-         *                    between hidden and collapsed states.
-         */
-        public abstract void onSlide(@NonNull View bottomSheet, float slideOffset);
-    }
-    /**
-     * The bottom sheet is dragging.
-     */
-    public static final int STATE_DRAGGING = 1;
-    /**
-     * The bottom sheet is settling.
-     */
-    public static final int STATE_SETTLING = 2;
-    /**
-     * The bottom sheet is expanded.
-     */
-    public static final int STATE_EXPANDED = 3;
-    /**
-     * The bottom sheet is collapsed.
-     */
-    public static final int STATE_COLLAPSED = 4;
-    /**
-     * The bottom sheet is hidden.
-     */
-    public static final int STATE_HIDDEN = 5;
+public class RLSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
 
-    @IntDef({STATE_EXPANDED, STATE_COLLAPSED, STATE_DRAGGING, STATE_SETTLING, STATE_HIDDEN})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface State {}
     /**
      * Peek at the 16:9 ratio keyline of its parent.
      *
-     * <p>This can be used as a parameter for {@link #setPeekHeight(int)}.
-     * {@link #getPeekHeight()} will return this when the value is set.</p>
+     * <p>This can be used as a parameter for {@link #setPeekWidth(int)}.
+     * {@link #getPeekWidth()} will return this when the value is set.</p>
      */
-    public static final int PEEK_HEIGHT_AUTO = -1;
+    public static final int PEEK_WIDTH_AUTO = -1;
     private static final float HIDE_THRESHOLD = 0.5f;
     private static final float HIDE_FRICTION = 0.1f;
     private float mMaximumVelocity;
-    private int mPeekHeight;
-    private boolean mPeekHeightAuto;
-    private int mPeekHeightMin;
+    private int mPeekWidth;
+    private boolean mPeekWidthAuto;
+    private int mPeekWidthMin;
     private int mMinOffset;
     private int mMaxOffset;
     private boolean mHideable;
@@ -106,50 +69,56 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     @State private int mState = STATE_COLLAPSED;
     private ViewDragHelper mViewDragHelper;
     private boolean mIgnoreEvents;
-    private int mLastNestedScrollDy;
+    private int mLastNestedScrollDx;
     private boolean mNestedScrolled;
-    private int mParentHeight;
+    private int mParentWidth;
     private WeakReference<V> mViewRef;
     private WeakReference<View> mNestedScrollingChildRef;
-    private TopSheetCallback mCallback;
     private VelocityTracker mVelocityTracker;
     private int mActivePointerId;
-    private int mInitialY;
+    private int mInitialX;
     private boolean mTouchingScrollingChild;
+    private boolean mIsLeftHandedMode = false;
+
     /**
-     * Default constructor for instantiating TopSheetBehaviors.
+     * Default constructor for instantiating RLSheetBehaviors.
      */
-    public TopSheetBehavior() {
+    public RLSheetBehavior() {
     }
     /**
-     * Default constructor for inflating TopSheetBehaviors from layout.
+     * Default constructor for inflating RLSheetBehaviors from layout.
      *
      * @param context The {@link Context}.
      * @param attrs   The {@link AttributeSet}.
      */
-    public TopSheetBehavior(Context context, AttributeSet attrs) {
+    public RLSheetBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BottomSheetBehavior_Layout);
-        TypedValue value = a.peekValue(R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight);
-        if (value != null && value.data == PEEK_HEIGHT_AUTO) {
-            setPeekHeight(value.data);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SheetBehavior_Layout);
+        TypedValue value = a.peekValue(R.styleable.SheetBehavior_Layout_behavior_sheet_peekSize);
+        if (value != null && value.data == PEEK_WIDTH_AUTO) {
+            setPeekWidth(value.data);
         } else {
-            setPeekHeight(a.getDimensionPixelSize(R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, PEEK_HEIGHT_AUTO));
+            setPeekWidth(a.getDimensionPixelSize(
+                    R.styleable.SheetBehavior_Layout_behavior_sheet_peekSize, PEEK_WIDTH_AUTO));
         }
-        setHideable(a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_hideable, false));
-        setSkipCollapsed(a.getBoolean(R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false));
+        setHideable(a.getBoolean(R.styleable.SheetBehavior_Layout_behavior_sheet_hideable, false));
+        setSkipCollapsed(a.getBoolean(R.styleable.SheetBehavior_Layout_behavior_sheet_skipCollapsed, false));
+        mIsLeftHandedMode = a.getBoolean(R.styleable.SheetBehavior_Layout_behavior_sheet_leftHanded, false);
         a.recycle();
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
+
     @Override
     public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
-        return new SavedState(super.onSaveInstanceState(parent, child), mState);
+        return new SavedState(super.onSaveInstanceState(parent, child), mState, mIsLeftHandedMode);
     }
+
     @Override
     public void onRestoreInstanceState(CoordinatorLayout parent, V child, Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(parent, child, ss.getSuperState());
+        mIsLeftHandedMode = ss.isLeftHandedMode;
         // Intermediate states are restored as collapsed state
         if (ss.state == STATE_DRAGGING || ss.state == STATE_SETTLING) {
             mState = STATE_COLLAPSED;
@@ -157,45 +126,51 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             mState = ss.state;
         }
     }
+
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
         if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
             ViewCompat.setFitsSystemWindows(child, true);
         }
-        int savedTop = child.getTop();
+        int savedLeft = child.getLeft();
         // First let the parent lay it out
         parent.onLayoutChild(child, layoutDirection);
         // Offset the bottom sheet
-        mParentHeight = parent.getHeight();
-        int peekHeight;
-        if (mPeekHeightAuto) {
-            if (mPeekHeightMin == 0) {
-                mPeekHeightMin = parent.getResources().getDimensionPixelSize(
-                        R.dimen.top_sheet_peek_height_min);
+        mParentWidth = parent.getWidth();
+        int peekWidth;
+        if (mPeekWidthAuto) {
+            if (mPeekWidthMin == 0) {
+                mPeekWidthMin = parent.getResources().getDimensionPixelSize(R.dimen.top_sheet_peek_height_min);
             }
-            peekHeight = Math.max(mPeekHeightMin, parent.getWidth() * 9 / 16);
+            peekWidth = Math.max(mPeekWidthMin, mParentWidth - parent.getHeight() * 9 / 16);
         } else {
-            peekHeight = mPeekHeight;
+            peekWidth = mPeekWidth;
         }
 
-        final int childHeight = child.getHeight();
-        mMaxOffset = Math.min(0, mParentHeight - childHeight); // expanded
-        mMinOffset = Math.min(peekHeight - childHeight, mMaxOffset); // collapsed
-        if (mState == STATE_EXPANDED) {
-            ViewCompat.offsetTopAndBottom(child, mMaxOffset);
-        } else if (mHideable && mState == STATE_HIDDEN) {
-            ViewCompat.offsetTopAndBottom(child, -childHeight);
-        } else if (mState == STATE_COLLAPSED) {
-            ViewCompat.offsetTopAndBottom(child, mMinOffset);
-        } else if (mState == STATE_DRAGGING || mState == STATE_SETTLING) {
-            ViewCompat.offsetTopAndBottom(child, savedTop - child.getTop());
+        if (mIsLeftHandedMode) {
+            final int childWidth = child.getWidth();
+            mMaxOffset = Math.min(0, mParentWidth - childWidth); // expanded
+            mMinOffset = Math.min(peekWidth - childWidth, mMaxOffset); // collapsed
+        } else {
+            mMinOffset = Math.max(0, mParentWidth - child.getWidth());
+            mMaxOffset = Math.max(mParentWidth - peekWidth, mMinOffset);
         }
+
+        if (mState == STATE_EXPANDED) {
+            ViewCompat.offsetLeftAndRight(child, mIsLeftHandedMode ? mMaxOffset : mMinOffset);
+        } else if (mHideable && mState == STATE_HIDDEN) {
+            ViewCompat.offsetLeftAndRight(child, mIsLeftHandedMode ? -child.getHeight() : mParentWidth);
+        } else if (mState == STATE_COLLAPSED) {
+            ViewCompat.offsetLeftAndRight(child, mIsLeftHandedMode ? mMinOffset : mMaxOffset);
+        } else if (mState == STATE_DRAGGING || mState == STATE_SETTLING) {
+            ViewCompat.offsetLeftAndRight(child, savedLeft - child.getLeft());
+        }
+
         if (mViewDragHelper == null) {
             mViewDragHelper = ViewDragHelper.create(parent, mDragCallback);
         }
         mViewRef = new WeakReference<>(child);
-        View nestedScrollingChild = findScrollingChild(child);
-        mNestedScrollingChildRef = new WeakReference<>(nestedScrollingChild);
+        mNestedScrollingChildRef = new WeakReference<>(findScrollingChild(child));
         return true;
     }
 
@@ -226,16 +201,16 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
-                int initialX = (int) event.getX();
-                mInitialY = (int) event.getY();
+                mInitialX = (int) event.getX();
+                int initialY = (int) event.getY();
                 View scroll = mNestedScrollingChildRef != null
                         ? mNestedScrollingChildRef.get() : null;
-                if (scroll != null && parent.isPointInChildBounds(scroll, initialX, mInitialY)) {
+                if (scroll != null && parent.isPointInChildBounds(scroll, mInitialX, initialY)) {
                     mActivePointerId = event.getPointerId(event.getActionIndex());
                     mTouchingScrollingChild = true;
                 }
                 mIgnoreEvents = mActivePointerId == MotionEvent.INVALID_POINTER_ID &&
-                        !parent.isPointInChildBounds(child, initialX, mInitialY);
+                        !parent.isPointInChildBounds(child, mInitialX, initialY);
                 break;
         }
         if (!mIgnoreEvents && mViewDragHelper.shouldInterceptTouchEvent(event)) {
@@ -248,7 +223,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         return action == MotionEvent.ACTION_MOVE && scroll != null &&
                 !mIgnoreEvents && mState != STATE_DRAGGING &&
                 !parent.isPointInChildBounds(scroll, (int) event.getX(), (int) event.getY()) &&
-                Math.abs(mInitialY - event.getY()) > mViewDragHelper.getTouchSlop();
+                Math.abs(mInitialX - event.getX()) > mViewDragHelper.getTouchSlop();
     }
 
     @Override
@@ -274,7 +249,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         // The ViewDragHelper tries to capture only the top-most View. We have to explicitly tell it
         // to capture the bottom sheet in case it is not captured and the touch slop is passed.
         if (action == MotionEvent.ACTION_MOVE && !mIgnoreEvents) {
-            if (Math.abs(mInitialY - event.getY()) > mViewDragHelper.getTouchSlop()) {
+            if (Math.abs(mInitialX - event.getX()) > mViewDragHelper.getTouchSlop()) {
                 mViewDragHelper.captureChildView(child, event.getPointerId(event.getActionIndex()));
             }
         }
@@ -284,53 +259,81 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     @Override
     public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, V child,
                                        View directTargetChild, View target, int nestedScrollAxes) {
-        mLastNestedScrollDy = 0;
+        mLastNestedScrollDx = 0;
         mNestedScrolled = false;
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_HORIZONTAL) != 0;
     }
 
     @Override
-    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child,
-                                  View target, int dx, int dy, int[] consumed) {
+    public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx,
+                                  int dy, int[] consumed) {
 
         View scrollingChild = mNestedScrollingChildRef.get();
         if (target != scrollingChild) {
             return;
         }
-        int currentTop = child.getTop();
-        int newTop = currentTop - dy;
-        if (dy > 0) { // Upward
-              if (mState != STATE_EXPANDED || !target.canScrollVertically(1)) {
-                if (mMinOffset <= newTop || mHideable) {
-                    consumed[1] = dy;
-                    ViewCompat.offsetTopAndBottom(child, -dy);
-                    setStateInternal(STATE_DRAGGING);
+        int currentLeft = child.getLeft();
+        int newLeft = currentLeft - dx;
+        if (dx > 0) { // Upward
+            if (mIsLeftHandedMode) {
+                if (mState != STATE_EXPANDED || !target.canScrollHorizontally(1)) {
+                    if (mMinOffset <= newLeft || mHideable) {
+                        consumed[0] = dx;
+                        ViewCompat.offsetLeftAndRight(child, -dx);
+                        setStateInternal(STATE_DRAGGING);
+                    } else {
+                        consumed[0] = currentLeft - mMinOffset;
+                        ViewCompat.offsetLeftAndRight(child, -consumed[0]);
+                        setStateInternal(STATE_COLLAPSED);
+                    }
+                }
+            } else {
+                if (newLeft < mMinOffset) {
+                    consumed[0] = currentLeft - mMinOffset;
+                    ViewCompat.offsetTopAndBottom(child, -consumed[0]);
+                    setStateInternal(STATE_EXPANDED);
                 } else {
-                    consumed[1] = currentTop - mMinOffset;
-                    ViewCompat.offsetTopAndBottom(child, -consumed[1]);
-                    setStateInternal(STATE_COLLAPSED);
+                    consumed[0] = dx;
+                    ViewCompat.offsetTopAndBottom(child, -dx);
+                    setStateInternal(STATE_DRAGGING);
                 }
             }
 
-        } else if (dy < 0) { // Downward
-            if (mMaxOffset < newTop) {
-                consumed[1] = currentTop - mMaxOffset;
-                ViewCompat.offsetTopAndBottom(child, -consumed[1]);
-                setStateInternal(STATE_EXPANDED);
+        } else if (dx < 0) { // Downward
+            if (mIsLeftHandedMode) {
+                if (mMaxOffset < newLeft) {
+                    consumed[0] = currentLeft - mMaxOffset;
+                    ViewCompat.offsetLeftAndRight(child, -consumed[0]);
+                    setStateInternal(STATE_EXPANDED);
+                } else {
+                    consumed[0] = dx;
+                    ViewCompat.offsetLeftAndRight(child, -dx);
+                    setStateInternal(STATE_DRAGGING);
+                }
+
             } else {
-                consumed[1] = dy;
-                ViewCompat.offsetTopAndBottom(child, -dy);
-                setStateInternal(STATE_DRAGGING);
+                if (!target.canScrollHorizontally(-1)) {
+                    if (newLeft <= mMaxOffset || mHideable) {
+                        consumed[0] = dx;
+                        ViewCompat.offsetTopAndBottom(child, -dx);
+                        setStateInternal(STATE_DRAGGING);
+                    } else {
+                        consumed[0] = currentLeft - mMaxOffset;
+                        ViewCompat.offsetTopAndBottom(child, -consumed[0]);
+                        setStateInternal(STATE_COLLAPSED);
+                    }
+                }
             }
         }
-        dispatchOnSlide(child.getTop());
-        mLastNestedScrollDy = dy;
+        dispatchOnSlide(child.getLeft());
+        mLastNestedScrollDx = dx;
         mNestedScrolled = true;
     }
 
     @Override
     public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target) {
-        if (child.getTop() == mMaxOffset) {
+        if ((mIsLeftHandedMode && child.getLeft() == mMaxOffset) ||
+                (!mIsLeftHandedMode && child.getLeft() == mMinOffset)) {
             setStateInternal(STATE_EXPANDED);
             return;
         }
@@ -338,28 +341,53 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
                 target != mNestedScrollingChildRef.get() || !mNestedScrolled) {
             return;
         }
-        int top;
+        int left;
         int targetState;
-        if (mLastNestedScrollDy < 0) {
-            top = mMaxOffset;
-            targetState = STATE_EXPANDED;
-        } else if (mHideable && shouldHide(child, getYVelocity())) {
-            top = -child.getHeight();
-            targetState = STATE_HIDDEN;
-        } else if (mLastNestedScrollDy == 0) {
-            int currentTop = child.getTop();
-            if (Math.abs(currentTop - mMinOffset) < Math.abs(currentTop - mMaxOffset)) {
-                top = mMinOffset;
-                targetState = STATE_COLLAPSED;
-            } else {
-                top = mMaxOffset;
+
+        if (mIsLeftHandedMode) {
+            if (mLastNestedScrollDx < 0) {
+                left = mMaxOffset;
                 targetState = STATE_EXPANDED;
+            } else if (mHideable && shouldHide(child, getXVelocity())) {
+                left = -child.getWidth();
+                targetState = STATE_HIDDEN;
+            } else if (mLastNestedScrollDx == 0) {
+                int currentTop = child.getTop();
+                if (Math.abs(currentTop - mMinOffset) < Math.abs(currentTop - mMaxOffset)) {
+                    left = mMinOffset;
+                    targetState = STATE_COLLAPSED;
+                } else {
+                    left = mMaxOffset;
+                    targetState = STATE_EXPANDED;
+                }
+            } else {
+                left = mMinOffset;
+                targetState = STATE_COLLAPSED;
             }
+
         } else {
-            top = mMinOffset;
-            targetState = STATE_COLLAPSED;
+            if (mLastNestedScrollDx > 0) {
+                left = mMinOffset;
+                targetState = STATE_EXPANDED;
+            } else if (mHideable && shouldHide(child, getXVelocity())) {
+                left = mParentWidth;
+                targetState = STATE_HIDDEN;
+            } else if (mLastNestedScrollDx == 0) {
+                int currentLeft = child.getLeft();
+                if (Math.abs(currentLeft - mMinOffset) < Math.abs(currentLeft - mMaxOffset)) {
+                    left = mMinOffset;
+                    targetState = STATE_EXPANDED;
+                } else {
+                    left = mMaxOffset;
+                    targetState = STATE_COLLAPSED;
+                }
+            } else {
+                left = mMaxOffset;
+                targetState = STATE_COLLAPSED;
+            }
         }
-        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), top)) {
+
+        if (mViewDragHelper.smoothSlideViewTo(child, left, child.getTop())) {
             setStateInternal(STATE_SETTLING);
             ViewCompat.postOnAnimation(child, new SettleRunnable(child, targetState));
         } else {
@@ -379,23 +407,27 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     /**
      * Sets the height of the bottom sheet when it is collapsed.
      *
-     * @param peekHeight The height of the collapsed bottom sheet in pixels, or
-     *                   {@link #PEEK_HEIGHT_AUTO} to configure the sheet to peek automatically
+     * @param peekWidth The height of the collapsed bottom sheet in pixels, or
+     *                   {@link #PEEK_WIDTH_AUTO} to configure the sheet to peek automatically
      *                   at 16:9 ratio keyline.
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_peekHeight
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
      */
-    public final void setPeekHeight(int peekHeight) {
+    public final void setPeekWidth(int peekWidth) {
         boolean layout = false;
-        if (peekHeight == PEEK_HEIGHT_AUTO) {
-            if (!mPeekHeightAuto) {
-                mPeekHeightAuto = true;
+        if (peekWidth == PEEK_WIDTH_AUTO) {
+            if (!mPeekWidthAuto) {
+                mPeekWidthAuto = true;
                 layout = true;
             }
-        } else if (mPeekHeightAuto || mPeekHeight != peekHeight) {
-            mPeekHeightAuto = false;
-            mPeekHeight = Math.max(0, peekHeight);
-            mMinOffset = (mViewRef != null && mViewRef.get() != null)
-                    ? peekHeight - mViewRef.get().getHeight() : mMaxOffset;
+        } else if (mPeekWidthAuto || mPeekWidth != peekWidth) {
+            mPeekWidthAuto = false;
+            mPeekWidth = Math.max(0, peekWidth);
+            if (mIsLeftHandedMode) {
+                mMinOffset = (mViewRef != null && mViewRef.get() != null)
+                        ? peekWidth - mViewRef.get().getWidth() : mMaxOffset;
+            } else {
+                mMaxOffset = mParentWidth - peekWidth;
+            }
             layout = true;
         }
         if (layout && mState == STATE_COLLAPSED && mViewRef != null) {
@@ -405,62 +437,60 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             }
         }
     }
+
     /**
      * Gets the height of the bottom sheet when it is collapsed.
      *
-     * @return The height of the collapsed bottom sheet in pixels, or {@link #PEEK_HEIGHT_AUTO}
+     * @return The height of the collapsed bottom sheet in pixels, or {@link #PEEK_WIDTH_AUTO}
      *         if the sheet is configured to peek automatically at 16:9 ratio keyline
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_peekHeight
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
      */
-    public final int getPeekHeight() {
-        return mPeekHeightAuto ? PEEK_HEIGHT_AUTO : mPeekHeight;
+    public final int getPeekWidth() {
+        return mPeekWidthAuto ? PEEK_WIDTH_AUTO : mPeekWidth;
     }
+
     /**
      * Sets whether this bottom sheet can hide when it is swiped down.
      *
      * @param hideable {@code true} to make this bottom sheet hideable.
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_hideable
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
      */
     public void setHideable(boolean hideable) {
         mHideable = hideable;
     }
+
     /**
      * Gets whether this bottom sheet can hide when it is swiped down.
      *
      * @return {@code true} if this bottom sheet can hide.
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_hideable
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
      */
     public boolean isHideable() {
         return mHideable;
     }
+
     /**
      * Sets whether this bottom sheet should skip the collapsed state when it is being hidden
      * after it is expanded once. Setting this to true has no effect unless the sheet is hideable.
      *
      * @param skipCollapsed True if the bottom sheet should skip the collapsed state.
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_skipCollapsed
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
      */
     public void setSkipCollapsed(boolean skipCollapsed) {
         mSkipCollapsed = skipCollapsed;
     }
+
     /**
      * Sets whether this bottom sheet should skip the collapsed state when it is being hidden
      * after it is expanded once.
      *
      * @return Whether the bottom sheet should skip the collapsed state.
-     * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_skipCollapsed
+     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
      */
     public boolean getSkipCollapsed() {
         return mSkipCollapsed;
     }
-    /**
-     * Sets a callback to be notified of bottom sheet events.
-     *
-     * @param callback The callback to notify when bottom sheet events occur.
-     */
-    public void setBottomSheetCallback(TopSheetCallback callback) {
-        mCallback = callback;
-    }
+
     /**
      * Sets the state of the bottom sheet. The bottom sheet will transition to that state with
      * animation.
@@ -509,14 +539,18 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         return mState;
     }
 
-    void setStateInternal(@State int state) {
+    public final boolean isLeftHandedMode() {
+        return mIsLeftHandedMode;
+    }
+
+    private void setStateInternal(@State int state) {
         if (mState == state) {
             return;
         }
         mState = state;
-        View bottomSheet = mViewRef.get();
-        if (bottomSheet != null && mCallback != null) {
-            mCallback.onStateChanged(bottomSheet, state);
+        View sheet = mViewRef.get();
+        if (sheet != null && getCallback() != null) {
+            getCallback().onStateChanged(sheet, state);
         }
     }
 
@@ -528,16 +562,27 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         }
     }
 
-    boolean shouldHide(View child, float yvel) {
+    private boolean shouldHide(View child, float xvel) {
         if (mSkipCollapsed) {
             return true;
         }
-        if (mMinOffset + child.getHeight() < child.getBottom()) {
-            // It should not hide, but collapse.
-            return false;
+
+        if (mIsLeftHandedMode) {
+            if (mMinOffset + child.getWidth() < child.getRight()) {
+                // It should not hide, but collapse.
+                return false;
+            }
+            final float newLeft = child.getLeft() + xvel * HIDE_FRICTION;
+            return Math.abs(newLeft - mMinOffset) / (float) mPeekWidth > HIDE_THRESHOLD;
+
+        } else {
+            if (child.getLeft() < mMaxOffset) {
+                // It should not hide, but collapse.
+                return false;
+            }
+            final float newLeft = child.getLeft() + xvel * HIDE_FRICTION;
+            return Math.abs(newLeft - mMaxOffset) / (float) mPeekWidth > HIDE_THRESHOLD;
         }
-        final float newTop = child.getTop() + yvel * HIDE_FRICTION;
-        return Math.abs(newTop - mMinOffset) / (float) mPeekHeight > HIDE_THRESHOLD;
     }
 
     @VisibleForTesting
@@ -557,23 +602,23 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
         return null;
     }
 
-    private float getYVelocity() {
+    private float getXVelocity() {
         mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-        return mVelocityTracker.getYVelocity(mActivePointerId);
+        return mVelocityTracker.getXVelocity(mActivePointerId);
     }
 
     private void startSettlingAnimation(View child, int state) {
-        int top;
+        int left;
         if (state == STATE_COLLAPSED) {
-            top = mMinOffset;
+            left = mIsLeftHandedMode ? mMinOffset : mMaxOffset;
         } else if (state == STATE_EXPANDED) {
-            top = mMaxOffset;
+            left = mIsLeftHandedMode ? mMaxOffset : mMinOffset;
         } else if (mHideable && state == STATE_HIDDEN) {
-            top = -child.getHeight();
+            left = mIsLeftHandedMode ? -child.getWidth() : mParentWidth;
         } else {
             throw new IllegalArgumentException("Illegal state argument: " + state);
         }
-        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), top)) {
+        if (mViewDragHelper.smoothSlideViewTo(child, left, child.getTop())) {
             setStateInternal(STATE_SETTLING);
             ViewCompat.postOnAnimation(child, new SettleRunnable(child, state));
         } else {
@@ -582,6 +627,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     private final ViewDragHelper.Callback mDragCallback = new ViewDragHelper.Callback() {
+
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
             if (mState == STATE_DRAGGING) {
@@ -592,8 +638,8 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             }
             if (mState == STATE_EXPANDED && mActivePointerId == pointerId) {
                 View scroll = mNestedScrollingChildRef.get();
-                if (scroll != null && scroll.canScrollVertically(1)) {
-                    // Let the content scroll down
+                if (scroll != null && scroll.canScrollHorizontally(-1)) {
+                    // Let the content scroll up
                     return false;
                 }
             }
@@ -602,7 +648,7 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-            dispatchOnSlide(top);
+            dispatchOnSlide(left);
         }
 
         @Override
@@ -614,33 +660,55 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            int top;
+            int left;
             @State int targetState;
-            if (0 < yvel) { // Moving down
-                top = mMaxOffset;
-                targetState = STATE_EXPANDED;
-            } else if (mHideable && shouldHide(releasedChild, yvel)) {
-                top = (mViewRef != null && mViewRef.get() != null)
-                        ? -mViewRef.get().getHeight() : -mParentHeight;
-                targetState = STATE_HIDDEN;
-            } else if (yvel == 0.f) {
-                int currentTop = releasedChild.getTop();
-                if (Math.abs(currentTop - mMinOffset) < Math.abs(currentTop - mMaxOffset)) {
-                    top = mMinOffset;
-                    targetState = STATE_COLLAPSED;
-                } else {
-                    top = mMaxOffset;
+            if (mIsLeftHandedMode) {
+                if (0 < xvel) {
+                    left = mMaxOffset;
                     targetState = STATE_EXPANDED;
+                } else if (mHideable && shouldHide(releasedChild, xvel)) {
+                    left = (mViewRef != null && mViewRef.get() != null)
+                            ? -mViewRef.get().getWidth() : -mParentWidth;
+                    targetState = STATE_HIDDEN;
+                } else if (yvel == 0.f) {
+                    int currentLeft = releasedChild.getLeft();
+                    if (Math.abs(currentLeft - mMinOffset) < Math.abs(currentLeft - mMaxOffset)) {
+                        left = mMinOffset;
+                        targetState = STATE_COLLAPSED;
+                    } else {
+                        left = mMaxOffset;
+                        targetState = STATE_EXPANDED;
+                    }
+                } else {
+                    left = mMinOffset;
+                    targetState = STATE_COLLAPSED;
                 }
+
             } else {
-                top = mMinOffset;
-                targetState = STATE_COLLAPSED;
+                if (xvel < 0) {
+                    left = mMinOffset;
+                    targetState = STATE_EXPANDED;
+                } else if (mHideable && shouldHide(releasedChild, xvel)) {
+                    left = mParentWidth;
+                    targetState = STATE_HIDDEN;
+                } else if (xvel == 0.f) {
+                    int currentLeft = releasedChild.getLeft();
+                    if (Math.abs(currentLeft - mMinOffset) < Math.abs(currentLeft - mMaxOffset)) {
+                        left = mMinOffset;
+                        targetState = STATE_EXPANDED;
+                    } else {
+                        left = mMaxOffset;
+                        targetState = STATE_COLLAPSED;
+                    }
+                } else {
+                    left = mMaxOffset;
+                    targetState = STATE_COLLAPSED;
+                }
             }
 
-            if (mViewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top)) {
+            if (mViewDragHelper.settleCapturedViewAt(left, releasedChild.getTop())) {
                 setStateInternal(STATE_SETTLING);
-                ViewCompat.postOnAnimation(releasedChild,
-                        new SettleRunnable(releasedChild, targetState));
+                ViewCompat.postOnAnimation(releasedChild, new SettleRunnable(releasedChild, targetState));
             } else {
                 setStateInternal(targetState);
             }
@@ -648,43 +716,56 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            return MathUtils.clamp(top, mHideable ? -child.getHeight() : mMinOffset, mMaxOffset);
+            return child.getTop();
         }
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-            return child.getLeft();
+            return mIsLeftHandedMode
+                    ? MathUtils.clamp(left, mHideable ? -child.getWidth() : mMinOffset, mMaxOffset)
+                    : MathUtils.clamp(left, mMinOffset, mHideable ? mParentWidth : mMaxOffset);
         }
 
         @Override
-        public int getViewVerticalDragRange(View child) {
+        public int getViewHorizontalDragRange(View child) {
             if (mHideable) {
-                return Math.abs(mMaxOffset + child.getHeight());
+                return mIsLeftHandedMode
+                        ? Math.abs(mMaxOffset + child.getHeight())
+                        : mParentWidth - mMinOffset;
             } else {
-                return Math.abs(mMaxOffset - mMinOffset);
+                return mIsLeftHandedMode
+                        ? Math.abs(mMaxOffset - mMinOffset)
+                        : mMaxOffset - mMinOffset;
             }
         }
     };
 
-    void dispatchOnSlide(int top) {
+    private void dispatchOnSlide(int left) {
         View bottomSheet = mViewRef.get();
-        if (bottomSheet != null && mCallback != null) {
-            if (top < mMinOffset) {
-                mCallback.onSlide(bottomSheet, (float) (top - mMinOffset) /
-                        (bottomSheet.getHeight() + mMinOffset));
+        if (bottomSheet != null && getCallback() != null) {
+            if (mIsLeftHandedMode) {
+                if (left < mMinOffset) {
+                    getCallback().onSlide(bottomSheet,
+                            (float) (left - mMinOffset) / (bottomSheet.getWidth() + mMinOffset));
+                } else {
+                    getCallback().onSlide(bottomSheet,
+                            (float) (left - mMinOffset) / ((mMaxOffset - mMinOffset)));
+                }
+
             } else {
-                mCallback.onSlide(bottomSheet,
-                        (float) (top - mMinOffset) / ((mMaxOffset - mMinOffset)));
+                if (left > mMaxOffset) {
+                    getCallback().onSlide(bottomSheet, (float) (mMaxOffset - left) /
+                            (mParentWidth - mMaxOffset));
+                } else {
+                    getCallback().onSlide(bottomSheet,
+                            (float) (mMaxOffset - left) / ((mMaxOffset - mMinOffset)));
+                }
             }
         }
     }
 
-    @VisibleForTesting
-    int getPeekHeightMin() {
-        return mPeekHeightMin;
-    }
-
     private class SettleRunnable implements Runnable {
+
         private final View mView;
         @State private final int mTargetState;
 
@@ -704,8 +785,9 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
     }
 
     protected static class SavedState extends AbsSavedState {
-        @State
-        final int state;
+
+        @State final int state;
+        final boolean isLeftHandedMode;
 
         public SavedState(Parcel source) {
             this(source, null);
@@ -715,20 +797,24 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             super(source, loader);
             //noinspection ResourceType
             state = source.readInt();
+            isLeftHandedMode = source.readInt() !=0;
         }
 
-        public SavedState(Parcelable superState, @State int state) {
+        public SavedState(Parcelable superState, @State int state, boolean isLeftHandedMode) {
             super(superState);
             this.state = state;
+            this.isLeftHandedMode = isLeftHandedMode;
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
             out.writeInt(state);
+            out.writeInt(isLeftHandedMode ? 1 : 0);
         }
 
         public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
+
             @Override
             public SavedState createFromParcel(Parcel in, ClassLoader loader) {
                 return new SavedState(in, loader);
@@ -745,24 +831,25 @@ public class TopSheetBehavior<V extends View> extends CoordinatorLayout.Behavior
             }
         };
     }
+
     /**
-     * A utility function to get the {@link TopSheetBehavior} associated with the {@code view}.
+     * A utility function to get the {@link RLSheetBehavior} associated with the {@code view}.
      *
-     * @param view The {@link View} with {@link TopSheetBehavior}.
-     * @return The {@link TopSheetBehavior} associated with the {@code view}.
+     * @param view The {@link View} with {@link RLSheetBehavior}.
+     * @return The {@link RLSheetBehavior} associated with the {@code view}.
      */
     @SuppressWarnings("unchecked")
-    public static <V extends View> TopSheetBehavior<V> from(V view) {
+    public static <V extends View> RLSheetBehavior<V> from(V view) {
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (!(params instanceof CoordinatorLayout.LayoutParams)) {
             throw new IllegalArgumentException("The view is not a child of CoordinatorLayout");
         }
         CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params)
                 .getBehavior();
-        if (!(behavior instanceof TopSheetBehavior)) {
+        if (!(behavior instanceof RLSheetBehavior)) {
             throw new IllegalArgumentException(
-                    "The view is not associated with TopSheetBehavior");
+                    "The view is not associated with RLSheetBehavior");
         }
-        return (TopSheetBehavior<V>) behavior;
+        return (RLSheetBehavior<V>) behavior;
     }
 }
