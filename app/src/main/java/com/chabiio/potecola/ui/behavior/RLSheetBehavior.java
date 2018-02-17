@@ -140,7 +140,7 @@ public class RLSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
         int peekWidth;
         if (mPeekWidthAuto) {
             if (mPeekWidthMin == 0) {
-                mPeekWidthMin = parent.getResources().getDimensionPixelSize(R.dimen.top_sheet_peek_height_min);
+                mPeekWidthMin = parent.getResources().getDimensionPixelSize(R.dimen.rl_sheet_peek_width_min);
             }
             peekWidth = Math.max(mPeekWidthMin, mParentWidth - parent.getHeight() * 9 / 16);
         } else {

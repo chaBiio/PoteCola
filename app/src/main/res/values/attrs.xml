@@ -8,8 +8,8 @@
         <attr name="behavior_sheet_leftHanded" format="boolean"/>
     </declare-styleable>
 
-    <declare-styleable name="RatioRelativeLayout">
-        <attr name="layout_widthRatio" format="integer"/>
-        <attr name="layout_heightRatio" format="integer"/>
+    <declare-styleable name="Ratio_Params">
+        <attr name="ratio_widthRatio" format="integer"/>
+        <attr name="ratio_heightRatio" format="integer"/>
     </declare-styleable>
 </resources>

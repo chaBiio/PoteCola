@@ -26,8 +26,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.AbsSavedState;
@@ -43,8 +41,6 @@ import android.view.ViewParent;
 
 import com.chabiio.potecola.R;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
 /**
@@ -64,7 +60,7 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
     private static final float HIDE_FRICTION = 0.1f;
     private float mMaximumVelocity;
     private int mPeekHeight;
-    private boolean mPeekHeightAuto;
+    private boolean mIsPeekHeightAuto;
     private int mPeekHeightMin;
     private int mMinOffset;
     private int mMaxOffset;
@@ -75,6 +71,7 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
     private boolean mIgnoreEvents;
     private int mLastNestedScrollDy;
     private boolean mNestedScrolled;
+    private int mParentWidth;
     private int mParentHeight;
     private WeakReference<V> mViewRef;
     private WeakReference<View> mNestedScrollingChildRef;
@@ -110,6 +107,7 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
+
     @Override
     public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
         return new SavedState(super.onSaveInstanceState(parent, child), mState);
@@ -135,13 +133,14 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
         parent.onLayoutChild(child, layoutDirection);
         // Offset the bottom sheet
         mParentHeight = parent.getHeight();
+        mParentWidth = parent.getWidth();
         int peekHeight;
-        if (mPeekHeightAuto) {
+        if (mIsPeekHeightAuto) {
             if (mPeekHeightMin == 0) {
                 mPeekHeightMin = parent.getResources().getDimensionPixelSize(
                         R.dimen.top_sheet_peek_height_min);
             }
-            peekHeight = Math.max(mPeekHeightMin, parent.getWidth() * 9 / 16);
+            peekHeight = calculateDefaultPeekHeight(mPeekHeightMin, mParentWidth);
         } else {
             peekHeight = mPeekHeight;
         }
@@ -355,12 +354,12 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
     public final void setPeekHeight(int peekHeight) {
         boolean layout = false;
         if (peekHeight == PEEK_HEIGHT_AUTO) {
-            if (!mPeekHeightAuto) {
-                mPeekHeightAuto = true;
+            if (!mIsPeekHeightAuto) {
+                mIsPeekHeightAuto = true;
                 layout = true;
             }
-        } else if (mPeekHeightAuto || mPeekHeight != peekHeight) {
-            mPeekHeightAuto = false;
+        } else if (mIsPeekHeightAuto || mPeekHeight != peekHeight) {
+            mIsPeekHeightAuto = false;
             mPeekHeight = Math.max(0, peekHeight);
             mMinOffset = (mViewRef != null && mViewRef.get() != null)
                     ? peekHeight - mViewRef.get().getHeight() : mMaxOffset;
@@ -381,7 +380,7 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
      * @attr ref android.support.design.R.styleable#TopSheetBehavior_Layout_behavior_peekHeight
      */
     public final int getPeekHeight() {
-        return mPeekHeightAuto ? PEEK_HEIGHT_AUTO : mPeekHeight;
+        return mIsPeekHeightAuto ? calculateDefaultPeekHeight(mPeekHeightMin, mParentWidth) : mPeekHeight;
     }
     /**
      * Sets whether this bottom sheet can hide when it is swiped down.
@@ -626,6 +625,10 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
             }
         }
     };
+
+    private int calculateDefaultPeekHeight(int peekHeightMin, int parentWidth) {
+        return Math.max(peekHeightMin, parentWidth * 9 / 16);
+    }
 
     private void dispatchOnSlide(int top) {
         View bottomSheet = mViewRef.get();
