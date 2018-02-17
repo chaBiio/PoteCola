@@ -4,4 +4,7 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="top_sheet_peek_height_min">72dp</dimen>
     <dimen name="rl_sheet_peek_width_min">8dp</dimen>
+
+    <dimen name="home_top_sheet_elevation">4dp</dimen>
+    <dimen name="home_side_sheet_elevation">3dp</dimen>
 </resources>
