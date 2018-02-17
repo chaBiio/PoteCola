@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.chabiio.potecola.ui.HomeActivity">
+
+    <!--<TextView-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--android:id="@+id/sheet"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="@string/large_text"-->
+        <!--android:padding="16dp"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:textColor="#fff"-->
+        <!--android:elevation="4dp"-->
+        <!--app:layout_behavior="com.chabiio.potecola.ui.widget.TopSheetBehavior"-->
+        <!--app:behavior_hideable="true" />-->
+
+    <android.support.v4.widget.NestedScrollView
+        android:fitsSystemWindows="true"
+        android:id="@+id/sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        app:layout_behavior="@string/top_sheet_behavior"
+        app:behavior_hideable="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/large_text"
+            android:padding="16dp"
+            android:background="@color/colorPrimary"
+            android:textColor="#fff" />
+    </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/reset_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="48dp"
+        android:text="reset"/>
+
+</android.support.design.widget.CoordinatorLayout>
