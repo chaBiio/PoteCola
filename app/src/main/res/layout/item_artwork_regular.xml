@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chabiio.potecola.ui.widget.RatioCardView
+    android:id="@+id/artwork_base"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:ratio_widthRatio="1"
+    app:ratio_heightRatio="1"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
+
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:layout_marginLeft="8dp"-->
+    <!--android:layout_marginStart="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:layout_marginBottom="6dp"-->
+
+    <ImageView
+        android:id="@+id/artwork"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/artwork_test"/>
+    <com.chabiio.potecola.ui.widget.RatioImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ratio_widthRatio="10"
+        app:ratio_heightRatio="7"
+        android:layout_gravity="bottom"
+        android:src="@drawable/gradient_black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="18sp"
+            android:textColor="@color/text_primary_light"
+            android:textAlignment="center"
+            android:text="Refrection" />
+
+        <TextView
+            android:id="@+id/sub_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary_light"
+            android:text="Mr.Children" />
+
+    </LinearLayout>
+
+</com.chabiio.potecola.ui.widget.RatioCardView>

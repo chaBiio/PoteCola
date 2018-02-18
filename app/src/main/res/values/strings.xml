@@ -93,4 +93,7 @@
     <string name="action_settings">Settings</string>
     <string name="top_sheet_behavior">com.chabiio.potecola.ui.behavior.TopSheetBehavior</string>
     <string name="rl_sheet_behavior">com.chabiio.potecola.ui.behavior.RLSheetBehavior</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:id="@+id/cl_root"
     android:fitsSystemWindows="false"
-    tools:context="com.chabiio.potecola.ui.HomeActivity">
+    tools:context="com.chabiio.potecola.ui.HomeActivity"
+    android:background="@color/background_light">
 
     <FrameLayout
         android:id="@+id/contents_container"
@@ -28,9 +29,9 @@
         android:id="@+id/side_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_light"
+        android:background="@color/colorAccent"
         app:layout_behavior="@string/rl_sheet_behavior"
-        app:behavior_sheet_peekSize="24dp">
+        app:behavior_sheet_peekSize="@dimen/home_side_sheet_peek_width">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
