@@ -1,4 +1,4 @@
-package com.chabiio.potecola.ui.widget;
+package com.chabiio.potecola.ui.widget.ratio;
 
 import android.view.View;
 

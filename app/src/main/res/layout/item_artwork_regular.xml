@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chabiio.potecola.ui.widget.RatioCardView
+<com.chabiio.potecola.ui.widget.ratio.RatioCardView
     android:id="@+id/artwork_base"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/artwork_test"/>
-    <com.chabiio.potecola.ui.widget.RatioImageView
+    <com.chabiio.potecola.ui.widget.ratio.RatioImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:ratio_widthRatio="10"
@@ -64,4 +64,4 @@
 
     </LinearLayout>
 
-</com.chabiio.potecola.ui.widget.RatioCardView>
+</com.chabiio.potecola.ui.widget.ratio.RatioCardView>

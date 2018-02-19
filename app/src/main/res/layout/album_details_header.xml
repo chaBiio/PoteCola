@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/yellow">
+
+        <com.chabiio.potecola.ui.widget.ratio.RatioFrameLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            app:ratio_widthRatio="1"
+            app:ratio_heightRatio="1"
+            android:layout_height="wrap_content">
+
+            <com.chabiio.potecola.ui.widget.ratio.RatioImageView
+                android:id="@+id/artwork"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/artwork_test3"
+                android:padding="24dp"/>
+
+            <!-- scrim -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/yellow_scrim"/>
+
+        </com.chabiio.potecola.ui.widget.ratio.RatioFrameLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:text="It's A Wonderful World"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:textColor="@color/text_primary_dark" />
+
+            <TextView
+                android:id="@+id/sub_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="2016, 12songs"
+                android:textColor="@color/text_secondary_dark" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:background="@color/yellow_dark"
+        android:gravity="center_vertical">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/artist_test"
+            app:civ_border="false"
+            app:civ_shadow="false"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mr.Children"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:textColor="@color/text_primary_dark"/>
+
+    </LinearLayout>
+
+</LinearLayout>

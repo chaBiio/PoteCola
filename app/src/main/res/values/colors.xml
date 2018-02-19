@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3c4043</color>
-    <color name="colorPrimaryDark">@color/colorPrimary</color>
-    <color name="colorAccent">#4285f4</color>
+    <color name="colorPrimaryDark">@color/yellow</color>
+    <color name="colorAccent">@color/yellow</color>
     <color name="primary_light">#5f6368</color>
 
     <color name="background_light">#fafafa</color> <!-- grey 50 -->
@@ -15,6 +15,15 @@
     <color name="text_secondary_light">#b3ffffff</color> <!-- 70% -->
     <color name="text_disabled_light">#4dffffff</color> <!-- 30% -->
 
+    <color name="blue">#4285f4</color>
+
     <!-- Home Screen -->
     <color name="home_scrim">#a6000000</color> <!-- black 65% -->
+
+    <!-- Album Details Screen -->
+    <color name="yellow">#fdc403</color>
+    <color name="yellow_dark">#C99B02</color>
+    <color name="yellow_scrim">#61fdc403</color> <!-- 38% -->
+    <color name="scrollbar_track">#d7d7d7</color>
+    <color name="scrollbar">@color/primary_light</color>
 </resources>

@@ -1,9 +1,9 @@
-package com.chabiio.potecola.ui.widget;
+package com.chabiio.potecola.ui.widget.ratio;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
 
 import com.chabiio.potecola.R;
 
@@ -11,21 +11,22 @@ import com.chabiio.potecola.R;
  * Created by lionm on 2/18/2018.
  */
 
-public class RatioRelativeLayout extends RelativeLayout {
+public class RatioImageView extends AppCompatImageView {
+
 
     private RatioViewSizeMeasurer measurer;
 
-    public RatioRelativeLayout(Context context) {
+    public RatioImageView(Context context) {
         this(context, null);
         init(RatioViewSizeMeasurer.RATIO_NATURAL, RatioViewSizeMeasurer.RATIO_NATURAL);
     }
 
-    public RatioRelativeLayout(Context context, AttributeSet attrs) {
+    public RatioImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         init(context, attrs);
     }
 
-    public RatioRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RatioImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
