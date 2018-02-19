@@ -33,7 +33,7 @@ public class AlbumsFragment extends Fragment {
         RecyclerView grid = (RecyclerView) inflater.inflate(R.layout.grid, container, false);
 
         grid.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
-        grid.setAdapter(new AlbumAdapter(getActivity()));
+        grid.setAdapter(new AlbumAdapter(getActivity(), R.layout.item_artwork_regular));
         grid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

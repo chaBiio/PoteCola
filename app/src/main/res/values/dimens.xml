@@ -10,4 +10,11 @@
     <dimen name="home_side_sheet_peek_width">24dp</dimen>
 
     <dimen name="album_details_list_bottom_offset">16dp</dimen>
+
+    <dimen name="artist_details_list_left_offset">160dp</dimen>
+    <dimen name="artist_details_list_right_offset">88dp</dimen>
+    <dimen name="artist_details_list_top_offset">64dp</dimen>
+    <dimen name="artist_details_list_bottom_offset">24dp</dimen>
+    <dimen name="artist_details_list_bottom_margin">24dp</dimen>
+    <dimen name="artist_details_list_items_space">24dp</dimen>
 </resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chabiio.potecola.ui.widget.ratio.RatioCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:ratio_widthRatio="9"
+    app:ratio_heightRatio="16"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/background_light">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.chabiio.potecola.ui.widget.ratio.RatioImageView
+            android:id="@+id/artwork"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ratio_widthRatio="1"
+            app:ratio_heightRatio="1"
+            android:src="@drawable/artwork_test2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/artwork"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nver Mind"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary_dark" />
+
+            <TextView
+                android:id="@+id/sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12songs"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary_dark" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</com.chabiio.potecola.ui.widget.ratio.RatioCardView>

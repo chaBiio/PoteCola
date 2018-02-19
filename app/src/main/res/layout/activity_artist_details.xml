@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chabiio.potecola.ui.ArtistDetailsActivity"
+    android:background="@color/yellow">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
+    <!-- header -->
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:minHeight="98dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar"
+        android:paddingLeft="32dp"
+        android:paddingStart="32dp"
+        android:paddingRight="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ariana Grande On MyCln"
+            android:textColor="@color/text_primary_dark"
+            android:textSize="22sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-smallcaps" />
+
+        <TextView
+            android:id="@+id/extra_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="27 albums, 256songs"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary_dark"/>
+
+    </LinearLayout>
+
+    <!-- wallpaper -->
+
+    <ImageView
+        android:id="@+id/backgroud_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"
+        android:src="@drawable/artist_test"
+        android:scaleType="centerCrop"
+        android:background="@color/colorAccent"/>
+
+    <!-- scrim -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/header"
+        android:background="@color/artist_details_scrim"/>
+
+    <!-- guide -->
+
+    <com.chabiio.potecola.ui.widget.ratio.RatioSpacerView
+        android:id="@+id/menu_bar_bottom_line_guide"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/header"/>
+
+    <!-- menu bar -->
+
+    <LinearLayout
+        android:id="@+id/menu_bar"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/menu_bar_bottom_line_guide"
+        android:layout_width="256dp"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:background="@color/yellow_dark"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        android:elevation="3dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_menu"
+            android:rotation="-65"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MENU"
+            android:layout_marginLeft="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary_dark"/>
+
+    </LinearLayout>
+
+    <!-- grid -->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/menu_bar"
+        android:layout_marginBottom="@dimen/artist_details_list_bottom_margin"
+        android:overScrollMode="never"
+        android:scrollbarThumbHorizontal="@drawable/scrollbar"
+        android:scrollbarTrackHorizontal="@drawable/scrollbar_track"
+        android:scrollbarSize="8dp"
+        android:fadeScrollbars="true"
+        android:scrollbarAlwaysDrawHorizontalTrack="true"
+        android:scrollbars="horizontal"
+        android:scrollbarStyle="outsideOverlay"/>
+
+</RelativeLayout>

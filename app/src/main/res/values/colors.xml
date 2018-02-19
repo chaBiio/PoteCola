@@ -26,4 +26,8 @@
     <color name="yellow_scrim">#61fdc403</color> <!-- 38% -->
     <color name="scrollbar_track">#d7d7d7</color>
     <color name="scrollbar">@color/primary_light</color>
+
+    <!-- Artist Details Screen -->
+    <color name="artist_details_scrim">#8a000000</color>
+
 </resources>

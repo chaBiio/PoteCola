@@ -9,11 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.chabiio.potecola.R;
 import com.chabiio.potecola.ui.adapter.SongAdapter;
-import com.chabiio.potecola.ui.recyclerview.ItemOffsetDecoration;
+import com.chabiio.potecola.ui.recyclerview.LinearItemOffsetDecoration;
 import com.chabiio.potecola.util.Res;
 
 public class AlbumDetailsActivity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class AlbumDetailsActivity extends AppCompatActivity {
         final int statusBarHeight = res.getStatusBarHeight();
         final int navigationBarHeight = res.getNavigationBarHeight();
 
-        ItemOffsetDecoration offsetDecoration = new ItemOffsetDecoration();
+        LinearItemOffsetDecoration offsetDecoration = new LinearItemOffsetDecoration();
         offsetDecoration.bottomOffset = res.getDimInPx(R.dimen.album_details_list_bottom_offset)
                 + navigationBarHeight + statusBarHeight;
         list.addItemDecoration(offsetDecoration);
