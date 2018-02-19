@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chabiio.potecola.ui.widget.ratio.RatioRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:ratio_widthRatio="16"
+    app:ratio_heightRatio="9"
+    android:background="@color/colorPrimary">
+
+    <com.chabiio.potecola.ui.widget.ratio.RatioImageView
+        android:id="@+id/artwork"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:ratio_widthRatio="1"
+        app:ratio_heightRatio="1"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/artwork_test4"/>
+
+    <TextView
+        android:id="@+id/song_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Center Of Universe "
+        android:textColor="@color/text_primary_light"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:layout_toRightOf="@+id/artwork"
+        android:layout_toEndOf="@+id/artwork"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_above="@+id/artist_name"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/artist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mr.Children"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:textColor="@color/text_secondary_light"
+        android:layout_toRightOf="@+id/artwork"
+        android:layout_toEndOf="@id/artwork"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="4dp"
+        android:layout_above="@+id/control_buttons"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+    <LinearLayout
+        android:id="@+id/control_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_toRightOf="@+id/artwork"
+        android:layout_toEndOf="@id/artwork"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/skip_prev_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_skip_previous"
+            android:tint="@color/text_primary_light" />
+
+        <ImageView
+            android:id="@+id/play_pause_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_play_circle_filled"
+            android:tint="@color/my_yellow"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageView
+            android:id="@+id/skip_next_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_skip_next"
+            android:tint="@color/text_primary_light" />
+
+    </LinearLayout>
+
+</com.chabiio.potecola.ui.widget.ratio.RatioRelativeLayout>

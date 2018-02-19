@@ -16,6 +16,7 @@ import com.chabiio.potecola.R;
 import com.chabiio.potecola.ui.behavior.AbsSheetBehavior;
 import com.chabiio.potecola.ui.behavior.RLSheetBehavior;
 import com.chabiio.potecola.ui.behavior.TopSheetBehavior;
+import com.chabiio.potecola.util.Res;
 
 public class HomeActivity extends AppCompatActivity implements ScrollInteractionListener {
 
@@ -47,8 +48,8 @@ public class HomeActivity extends AppCompatActivity implements ScrollInteraction
         setContentView(R.layout.activity_home);
         initView();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new AlbumsFragment()).commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, new AlbumsFragment()).commit();
     }
 
     private void initView() {
@@ -61,8 +62,6 @@ public class HomeActivity extends AppCompatActivity implements ScrollInteraction
         topSheetBehavior = TopSheetBehavior.from(topSheet);
         sideSheetBehavior = RLSheetBehavior.from(sideSheet);
         sideSheetBehavior.setSheetCallback(sideSheetCallback);
-        topSheetBehavior.setHideable(true);
-        sideSheetBehavior.setHideable(true);
 
         // peek height of the top sheet
         Display display = getWindowManager().getDefaultDisplay();
@@ -71,16 +70,21 @@ public class HomeActivity extends AppCompatActivity implements ScrollInteraction
         final int peekHeight = (int) (displaySize.x * 9.0 / 16.0);
         topSheetBehavior.setPeekHeight(peekHeight);
 
-        // Add top margins to the bounds of main contents and the side sheet.
-//        CoordinatorLayout.LayoutParams params =
-//                (CoordinatorLayout.LayoutParams) contentsContainer.getLayoutParams();
-//        params.setMargins(params.leftMargin,
-//                params.topMargin + peekHeight,
-//                params.rightMargin + getResources().getDimensionPixelSize(R.dimen.home_side_sheet_peek_width),
-//                params.bottomMargin);
-//        contentsContainer.setLayoutParams(params);
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) sideSheet.getLayoutParams();
-        params.setMargins(params.leftMargin, params.topMargin + peekHeight,
+        // fixme; fitSystemWindows="true" is not working well...
+        // fitSystemWindows="true" is not working well, so add top
+        // and bottom margins or padding to contents manually.
+
+        Res res = new Res(this);
+        final int statusBarHeight = res.getStatusBarHeight();
+        final int navigationBarHeight = res.getNavigationBarHeight();
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) topSheet.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin + statusBarHeight,
+                params.rightMargin, params.bottomMargin);
+        topSheet.setLayoutParams(params);
+
+        params = (CoordinatorLayout.LayoutParams) sideSheet.getLayoutParams();
+        params.setMargins(params.leftMargin, params.topMargin + statusBarHeight,
                 params.rightMargin, params.bottomMargin);
         sideSheet.setLayoutParams(params);
 
@@ -95,12 +99,12 @@ public class HomeActivity extends AppCompatActivity implements ScrollInteraction
 
     @Override
     public void onScroll(RecyclerView scroll, int dx, int dy) {
-        if (dy > 20) {
-            topSheetBehavior.setState(AbsSheetBehavior.STATE_HIDDEN);
-            sideSheetBehavior.setState(AbsSheetBehavior.STATE_HIDDEN);
-        } else if (dy < -20) {
-            topSheetBehavior.setState(AbsSheetBehavior.STATE_COLLAPSED);
-            sideSheetBehavior.setState(AbsSheetBehavior.STATE_COLLAPSED);
-        }
+//        if (dy > 20) {
+//            topSheetBehavior.setState(AbsSheetBehavior.STATE_HIDDEN);
+//            sideSheetBehavior.setState(AbsSheetBehavior.STATE_HIDDEN);
+//        } else if (dy < -20) {
+//            topSheetBehavior.setState(AbsSheetBehavior.STATE_COLLAPSED);
+//            sideSheetBehavior.setState(AbsSheetBehavior.STATE_COLLAPSED);
+//        }
     }
 }

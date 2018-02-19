@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/yellow">
+        android:background="@color/my_yellow">
 
         <com.chabiio.potecola.ui.widget.ratio.RatioFrameLayout
             android:layout_weight="1"
@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:orientation="horizontal"
-        android:background="@color/yellow_dark"
+        android:background="@color/my_yellow_dark"
         android:gravity="center_vertical">
 
         <com.mikhaellopez.circularimageview.CircularImageView

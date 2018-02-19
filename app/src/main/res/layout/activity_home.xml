@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/cl_root"
-    android:fitsSystemWindows="false"
     tools:context="com.chabiio.potecola.ui.HomeActivity"
-    android:background="@color/background_light">
+    android:background="@color/primary_light">
 
     <FrameLayout
         android:id="@+id/contents_container"
@@ -46,6 +45,12 @@
         android:layout_height="match_parent"
         android:background="@color/background_light"
         app:behavior_hideable="false"
-        app:layout_behavior="@string/top_sheet_behavior"/>
+        app:layout_behavior="@string/top_sheet_behavior">
+        <include
+            layout="@layout/widget_music_control_panel_brief"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"/>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

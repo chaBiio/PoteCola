@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3c4043</color>
-    <color name="colorPrimaryDark">@color/yellow</color>
-    <color name="colorAccent">@color/yellow</color>
-    <color name="primary_light">#5f6368</color>
+    <!--<color name="colorPrimary">#3c4043</color>-->
+    <!--<color name="colorPrimaryDark">@color/my_yellow</color>-->
+    <!--<color name="colorAccent">@color/my_yellow</color>-->
+    <!--<color name="primary_light">#5f6368</color>-->
+
+    <color name="colorPrimary">@color/my_black</color>
+    <color name="colorPrimaryDark">@color/my_black</color>
+    <color name="colorAccent">@color/my_yellow</color>
+    <color name="primary_light">@color/my_black_more_light</color>
 
     <color name="background_light">#fafafa</color> <!-- grey 50 -->
     <color name="background_lightish">#e0e0e0</color> <!-- grey 300 -->
@@ -15,15 +20,31 @@
     <color name="text_secondary_light">#b3ffffff</color> <!-- 70% -->
     <color name="text_disabled_light">#4dffffff</color> <!-- 30% -->
 
-    <color name="blue">#4285f4</color>
+    <color name="my_blue">#3350e1</color>
+    <color name="my_blue_dark">#1D38C3</color>
+    <color name="my_blue_more_dark">#162B96</color>
+    <color name="my_blue_super_dark">#060C2C</color>
+    <color name="my_blue_light">#5F75E7</color>
+    <color name="my_blue_more_light">#8B9BED</color>
+    <color name="my_yellow">#ffc32d</color>
+    <color name="my_yellow_dark">#F4AB00</color>
+    <color name="my_yellow_more_dark">#C18700</color>
+    <color name="my_yellow_light">#FFCE5B</color>
+    <color name="my_yellow_more_light">#FFDD8E</color>
+    <color name="my_black">#18181a</color>
+    <color name="my_black_light">#2E2E32</color>
+    <color name="my_black_more_light">#46464C</color>
+    <color name="my_red">#ff1c1c</color>
+    <color name="my_red_dark">#E50000</color>
+    <color name="my_red_more_dark">#B20000</color>
+    <color name="my_red_light">#FF4C4C</color>
+    <color name="my_red_more_light">#FF7F7F</color>
 
     <!-- Home Screen -->
     <color name="home_scrim">#a6000000</color> <!-- black 65% -->
 
     <!-- Album Details Screen -->
-    <color name="yellow">#fdc403</color>
-    <color name="yellow_dark">#C99B02</color>
-    <color name="yellow_scrim">#61fdc403</color> <!-- 38% -->
+    <color name="yellow_scrim">#61ffc32d</color> <!-- 38% -->
     <color name="scrollbar_track">#d7d7d7</color>
     <color name="scrollbar">@color/primary_light</color>
 
