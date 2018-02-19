@@ -21,6 +21,7 @@ package com.chabiio.potecola.ui.behavior;
  */
 
 import android.support.design.widget.CoordinatorLayout;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -145,17 +146,19 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
             peekHeight = mPeekHeight;
         }
 
+//        final int childTopMargin = ((CoordinatorLayout.LayoutParams) child.getLayoutParams()).topMargin;
+        int childTopMargin = 0;
         final int childHeight = child.getHeight();
         mMaxOffset = Math.min(0, mParentHeight - childHeight); // expanded
         mMinOffset = Math.min(peekHeight - childHeight, mMaxOffset); // collapsed
         if (mState == STATE_EXPANDED) {
-            ViewCompat.offsetTopAndBottom(child, mMaxOffset);
+            ViewCompat.offsetTopAndBottom(child, childTopMargin + mMaxOffset);
         } else if (mHideable && mState == STATE_HIDDEN) {
-            ViewCompat.offsetTopAndBottom(child, -childHeight);
+            ViewCompat.offsetTopAndBottom(child, childTopMargin - childHeight);
         } else if (mState == STATE_COLLAPSED) {
-            ViewCompat.offsetTopAndBottom(child, mMinOffset);
+            ViewCompat.offsetTopAndBottom(child, childTopMargin + mMinOffset);
         } else if (mState == STATE_DRAGGING || mState == STATE_SETTLING) {
-            ViewCompat.offsetTopAndBottom(child, savedTop - child.getTop());
+            ViewCompat.offsetTopAndBottom(child, childTopMargin + savedTop - child.getTop());
         }
         if (mViewDragHelper == null) {
             mViewDragHelper = ViewDragHelper.create(parent, mDragCallback);
@@ -326,7 +329,8 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
             top = mMinOffset;
             targetState = STATE_COLLAPSED;
         }
-        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), top)) {
+        int childTopMargin = ((CoordinatorLayout.LayoutParams) child.getLayoutParams()).topMargin;
+        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), childTopMargin + top)) {
             setStateInternal(STATE_SETTLING);
             ViewCompat.postOnAnimation(child, new SettleRunnable(child, targetState));
         } else {
@@ -533,7 +537,8 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
         } else {
             throw new IllegalArgumentException("Illegal state argument: " + state);
         }
-        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), top)) {
+        int childTopMargin = ((CoordinatorLayout.LayoutParams) child.getLayoutParams()).topMargin;
+        if (mViewDragHelper.smoothSlideViewTo(child, child.getLeft(), childTopMargin + top)) {
             setStateInternal(STATE_SETTLING);
             ViewCompat.postOnAnimation(child, new SettleRunnable(child, state));
         } else {
@@ -597,7 +602,8 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
                 targetState = STATE_COLLAPSED;
             }
 
-            if (mViewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), top)) {
+            int childTopMargin = ((CoordinatorLayout.LayoutParams) releasedChild.getLayoutParams()).topMargin;
+            if (mViewDragHelper.settleCapturedViewAt(releasedChild.getLeft(), childTopMargin + top)) {
                 setStateInternal(STATE_SETTLING);
                 ViewCompat.postOnAnimation(releasedChild,
                         new SettleRunnable(releasedChild, targetState));
@@ -608,7 +614,10 @@ public class TopSheetBehavior<V extends View> extends AbsSheetBehavior<V> {
 
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
-            return MathUtils.clamp(top, mHideable ? -child.getHeight() : mMinOffset, mMaxOffset);
+            int childTopMargin = ((CoordinatorLayout.LayoutParams) child.getLayoutParams()).topMargin;
+            return MathUtils.clamp(top,
+                    mHideable ? childTopMargin - child.getHeight() : childTopMargin + mMinOffset,
+                    childTopMargin + mMaxOffset);
         }
 
         @Override
