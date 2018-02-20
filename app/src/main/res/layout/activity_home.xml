@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/cl_root"
     tools:context="com.chabiio.potecola.ui.HomeActivity"
-    android:background="@color/primary_light">
+    android:background="@color/my_black_more_light">
 
     <FrameLayout
         android:id="@+id/contents_container"
@@ -28,7 +28,7 @@
         android:id="@+id/side_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorAccent"
+        android:background="@color/my_yellow"
         app:layout_behavior="@string/rl_sheet_behavior"
         app:behavior_sheet_peekSize="@dimen/home_side_sheet_peek_width">
         <TextView
@@ -43,9 +43,10 @@
         android:id="@+id/top_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_light"
+        android:background="@color/my_black"
         app:behavior_hideable="false"
         app:layout_behavior="@string/top_sheet_behavior">
+
         <include
             layout="@layout/widget_music_control_panel_brief"
             android:layout_width="match_parent"

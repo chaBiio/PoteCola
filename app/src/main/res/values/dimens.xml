@@ -17,4 +17,6 @@
     <dimen name="artist_details_list_bottom_offset">24dp</dimen>
     <dimen name="artist_details_list_bottom_margin">24dp</dimen>
     <dimen name="artist_details_list_items_space">24dp</dimen>
+
+    <dimen name="music_control_panel_seekbar_width_padding">1dp</dimen>
 </resources>

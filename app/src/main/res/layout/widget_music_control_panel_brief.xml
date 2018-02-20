@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chabiio.potecola.ui.widget.ratio.RatioRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chabiio.potecola.ui.widget.ratio.RatioRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/music_control_panel_brief_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:ratio_widthRatio="16"
     app:ratio_heightRatio="9"
-    android:background="@color/colorPrimary">
+    android:background="@color/my_black">
 
     <com.chabiio.potecola.ui.widget.ratio.RatioImageView
         android:id="@+id/artwork"
@@ -80,7 +82,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_play_circle_filled"
-            android:tint="@color/my_yellow"
+            android:tint="@color/my_yellow_dark"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginRight="8dp"
