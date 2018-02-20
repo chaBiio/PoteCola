@@ -28,11 +28,7 @@ public class TestActivity extends AppCompatActivity {
 
         // Make the SeekBar full width
         final SeekBar seekBar = findViewById(R.id.seekbar);
-        seekBar.setPadding(
-                res.getDimInPx(R.dimen.music_control_panel_seekbar_width_padding),
-                0,
-                res.getDimInPx(R.dimen.music_control_panel_seekbar_width_padding),
-                seekBar.getPaddingBottom());
+        seekBar.setPadding(0, seekBar.getPaddingTop(), 0, seekBar.getPaddingBottom());
 
         // Adjust seekBar's vertical position
         final View controlPanel = findViewById(R.id.control_panel);
