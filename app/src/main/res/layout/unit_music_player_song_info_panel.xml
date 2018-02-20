@@ -12,15 +12,13 @@
         android:layout_weight="2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/selectable_item_background_black"
+        android:background="@color/my_black"
         android:paddingLeft="16dp"
         android:paddingStart="16dp"
         android:paddingRight="24dp"
         android:paddingEnd="24dp"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:clickable="true"
-        android:focusable="true">
+        android:paddingBottom="16dp">
 
         <TextView
             android:layout_width="match_parent"

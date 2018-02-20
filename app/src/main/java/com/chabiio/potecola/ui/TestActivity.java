@@ -72,12 +72,13 @@ public class TestActivity extends AppCompatActivity {
 
                 // Adjust BottomSheet's peek height.
                 sheetBehavior.setPeekHeight(controlPanelHeight + res.getDimInPx(R.dimen.unit_music_player_song_info_panel_height));
+//                sheetBehavior.setPeekHeight(root.getHeight() - root.getWidth());
             }
         });
 
-        ViewCompat.setElevation(controlPanel, res.getDimInPx(R.dimen.music_player_control_panel_elevation));
-        ViewCompat.setElevation(seekBar, res.getDimInPx(R.dimen.music_player_control_panel_elevation));
-        ViewCompat.setElevation(menuPanel, res.getDimInPx(R.dimen.music_player_menu_panel_elevation));
+//        ViewCompat.setElevation(controlPanel, res.getDimInPx(R.dimen.music_player_control_panel_elevation));
+//        ViewCompat.setElevation(seekBar, res.getDimInPx(R.dimen.music_player_control_panel_elevation));
+//        ViewCompat.setElevation(menuPanel, res.getDimInPx(R.dimen.music_player_menu_panel_elevation));
 
         // Avoid unwanted scrolling of the bottom sheet
         controlPanel.setOnTouchListener(touchEater);

@@ -48,11 +48,13 @@
     <color name="ripple_for_black">@color/my_black_more_light</color>
     <color name="ripple_for_black_light">@color/my_black</color>
     <color name="ripple_borderless_for_black_more_light">@color/scrim_white</color>
+    <color name="ripple_borderless_for_yellow">@color/my_yellow_more_dark</color>
     <color name="ripple_scrim_red">@color/my_red</color>
 
     <color name="transparent">#00000000</color>
     <color name="scrim_black">#a6000000</color>
     <color name="scrim_white">#a6ffffff</color>
+    <color name="scrim_yellow">#61ffc32d</color> <!-- 38% -->
 
     <color name="icon_dark">@color/text_primary_dark</color>
     <color name="icon_light">@color/text_primary_light</color>
@@ -61,7 +63,6 @@
     <color name="home_scrim">#a6000000</color> <!-- black 65% -->
 
     <!-- Album Details Screen -->
-    <color name="yellow_scrim">#61ffc32d</color> <!-- 38% -->
     <color name="scrollbar_track">#d7d7d7</color>
     <color name="scrollbar">@color/primary_light</color>
 

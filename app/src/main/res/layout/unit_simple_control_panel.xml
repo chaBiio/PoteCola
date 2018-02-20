@@ -6,7 +6,7 @@
     android:background="@color/my_yellow">
 
     <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selectable_item_background_borderless"
         android:id="@+id/shuffle_btn"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -19,7 +19,7 @@
         android:focusable="true"/>
 
     <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selectable_item_background_borderless"
         android:id="@+id/skip_prev_btn"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -34,6 +34,7 @@
         android:focusable="true"/>
 
     <ImageView
+        android:background="@drawable/selectable_item_background_borderless_yellow"
         android:id="@+id/play_pause_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -48,7 +49,7 @@
         android:focusable="true"/>
 
     <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selectable_item_background_borderless_yellow"
         android:id="@+id/skip_next_btn"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -63,7 +64,7 @@
         android:focusable="true"/>
 
     <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selectable_item_background_borderless_yellow"
         android:id="@+id/repeat_btn"
         android:layout_width="24dp"
         android:layout_height="24dp"
