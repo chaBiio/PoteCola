@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/cl_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/my_black">
+
+    <com.chabiio.potecola.ui.widget.ratio.RatioImageView
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ratio_widthRatio="1"
+        app:ratio_heightRatio="1"
+        android:src="@drawable/artwork_test2"/>
+
+    <!-- menu panel -->
+
+    <LinearLayout
+        android:layout_marginTop="40dp"
+        android:id="@+id/menu_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:behavior_hideable="false">
+
+        <include layout="@layout/unit_music_player_song_info_panel"/>
+        <include layout="@layout/unit_music_player_action_panel"/>
+
+    </LinearLayout>
+
+    <!-- control panel -->
+
+    <RelativeLayout
+        android:id="@+id/control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/my_yellow"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:paddingTop="12dp">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/unit_simple_control_panel"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/playtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1:32 / 4:22"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp" />
+
+    </RelativeLayout>
+
+    <!-- fixme; Adjust the bottom margin in code -->
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:thumb="@drawable/seekbar_thumb"
+        android:progressDrawable="@drawable/seekbar_progress"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"/>
+
+</android.support.design.widget.CoordinatorLayout>

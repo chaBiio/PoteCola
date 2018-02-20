@@ -48,7 +48,7 @@
         app:layout_behavior="@string/top_sheet_behavior">
 
         <include
-            layout="@layout/widget_music_control_panel_brief"
+            layout="@layout/music_player_brief"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>

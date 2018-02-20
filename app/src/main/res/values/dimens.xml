@@ -18,5 +18,8 @@
     <dimen name="artist_details_list_bottom_margin">24dp</dimen>
     <dimen name="artist_details_list_items_space">24dp</dimen>
 
-    <dimen name="music_control_panel_seekbar_width_padding">1dp</dimen>
+    <dimen name="music_player_control_panel_elevation">4dp</dimen>
+    <dimen name="music_player_menu_panel_elevation">2dp</dimen>
+
+    <dimen name="unit_music_player_song_info_panel_height">142dp</dimen>
 </resources>
