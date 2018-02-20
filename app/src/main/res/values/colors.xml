@@ -43,7 +43,16 @@
     <color name="my_white_dark">#E5E5E5</color>
     <color name="my_white_more_dark">#CCCCCC</color>
 
+    <color name="ripple_for_blue">@color/my_blue_more_dark</color>
+    <color name="ripple_for_red">@color/my_red_more_dark</color>
+    <color name="ripple_for_black">@color/my_black_more_light</color>
+    <color name="ripple_for_black_light">@color/my_black</color>
+    <color name="ripple_borderless_for_black_more_light">@color/scrim_white</color>
+    <color name="ripple_scrim_red">@color/my_red</color>
+
     <color name="transparent">#00000000</color>
+    <color name="scrim_black">#a6000000</color>
+    <color name="scrim_white">#a6ffffff</color>
 
     <color name="icon_dark">@color/text_primary_dark</color>
     <color name="icon_light">@color/text_primary_light</color>

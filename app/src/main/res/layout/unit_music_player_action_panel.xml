@@ -19,8 +19,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/my_blue"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selectable_item_background_blue">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +53,9 @@
             android:paddingStart="24dp"
             android:paddingRight="24dp"
             android:paddingEnd="24dp"
-            android:background="@color/my_black_light">
+            android:background="@drawable/selectable_item_background_black_light"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
@@ -84,7 +88,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selectable_item_background_borderless">
 
             <ImageView
                 android:id="@+id/icon_add_to_playlist"
@@ -92,16 +99,13 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_playlist_add"
                 android:tint="@color/icon_light"
-                android:layout_marginTop="24dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:layout_marginTop="24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary_light"
-                android:text="Add To"
+                android:text="ADD TO"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"/>
 
@@ -112,7 +116,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selectable_item_background_borderless">
 
             <ImageView
                 android:id="@+id/icon_edit_song_info"
@@ -120,16 +127,13 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_featured_play_list"
                 android:tint="@color/icon_light"
-                android:layout_marginTop="26dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:layout_marginTop="26dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary_light"
-                android:text="Edit Info"
+                android:text="EDIT INFO"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"/>
 
@@ -141,7 +145,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selectable_item_background_borderless">
 
             <ImageView
                 android:id="@+id/icon_equalizer"
@@ -149,16 +156,13 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_equalizer"
                 android:tint="@color/icon_light"
-                android:layout_marginTop="24dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:layout_marginTop="24dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary_light"
-                android:text="Equalizer"
+                android:text="EQUALIZER"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"/>
 

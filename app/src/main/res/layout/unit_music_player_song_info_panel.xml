@@ -12,13 +12,15 @@
         android:layout_weight="2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/my_black"
+        android:background="@drawable/selectable_item_background_black"
         android:paddingLeft="16dp"
         android:paddingStart="16dp"
         android:paddingRight="24dp"
         android:paddingEnd="24dp"
         android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <TextView
             android:layout_width="match_parent"
@@ -63,7 +65,6 @@
         android:layout_height="match_parent"
         android:background="@color/my_red">
 
-
         <ImageView
             android:id="@+id/artist_thumb"
             android:layout_width="match_parent"
@@ -76,9 +77,19 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/home_scrim"
+            android:background="@drawable/selectable_item_background_scrim_red"
             android:layout_toLeftOf="@+id/icon_nav_next"
-            android:layout_toStartOf="@id/icon_nav_next"/>
+            android:layout_toStartOf="@id/icon_nav_next"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <!-- scrim for the ripple effect -->
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/selectable_item_background_scrim_red"-->
+            <!--android:clickable="true"-->
+            <!--android:focusable="true"/>-->
 
         <ImageView
             android:id="@+id/icon_nav_next"
