@@ -10,11 +10,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.Px;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.math.MathUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,13 +24,25 @@ import android.view.animation.Transformation;
 
 import com.chabiio.potecola.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by lionm on 2/24/2018.
  */
 
 public class MeltingView extends View {
 
+    public static final int GRAVITY_TOP_DOWN = 1;
+    public static final int GRAVITY_BOTTOM_UP = 2;
+    public static final int GRAVITY_LEFT_TO_RIGHT = 3;
+    public static final int GRAVITY_RIGHT_TO_LEFT = 4;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({GRAVITY_TOP_DOWN, GRAVITY_BOTTOM_UP, GRAVITY_LEFT_TO_RIGHT, GRAVITY_RIGHT_TO_LEFT})
+    public @interface Gravity {}
+
     @ColorInt private static final int DEFAULT_PRIMARY_COLOR = Color.WHITE;
+    @Gravity private static final int DEFAULT_GRAVITY = GRAVITY_TOP_DOWN;
     private static final int DEFAULT_DURATION = 500;
     private static final float DEFAULT_PROGRESS = 0.3f;
 
@@ -44,6 +56,7 @@ public class MeltingView extends View {
     @ColorInt private int secondaryColor;
     @ColorInt private int primaryColor;
     @ColorInt private int backgroundColor;
+    @Gravity private int gravity = DEFAULT_GRAVITY;
 
     public MeltingView(Context context) {
         this(context, null);
@@ -74,6 +87,7 @@ public class MeltingView extends View {
     private void readAttributes(Context context, AttributeSet attrs) {
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.MeltingView, 0, 0);
         try {
+            gravity = ta.getInteger(R.styleable.MeltingView_melting_gravity, DEFAULT_GRAVITY);
             primaryColor = ta.getColor(R.styleable.MeltingView_melting_primary_color, fetchAccentColor(context));
             secondaryColor = ta.getColor(R.styleable.MeltingView_melting_secondary_color, DEFAULT_PRIMARY_COLOR);
             duration = ta.getInteger(R.styleable.MeltingView_melting_animation_duration, DEFAULT_DURATION);
@@ -173,6 +187,19 @@ public class MeltingView extends View {
                 ContextCompat.getColor(context, background));
     }
 
+    public void setGravity(@Gravity int gravity, boolean forceUpdate) {
+        if (this.gravity != gravity) {
+            this.gravity = gravity;
+            wasGravityChanged = true;
+            if (forceUpdate) invalidate();
+        }
+    }
+
+    @Gravity
+    public int getGravity() {
+        return gravity;
+    }
+
     public void disablePreDrawing(boolean disable) {
         boolean forceUpdate = disable != disablePreDrawing;
         disablePreDrawing = disable;
@@ -203,7 +230,8 @@ public class MeltingView extends View {
     private static final float MIN_DURATION_RATE_SECONDARY = 0.3f;
     private static final float DURATION_RATE_SECONDARY = 0.65f;
     @Px private static final int BASE_LINE_OFFSET = -20;
-    @Px private static final int SEGMENT_WIDTH = 140;
+    @Px private static final int SEGMENT_WIDTH = 180;
+    @Px private static final int EXTRA_DRAWABLE_REGION_SIZE = 20;
     @Px private static final int SEGMENT_WIDTH_HALF = SEGMENT_WIDTH / 2;
 
     private float[] segmentYPositions;
@@ -217,10 +245,19 @@ public class MeltingView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        // Calculate the coordinates assuming that 'gravity' is 'GRAVITY_TOP_DOWN'.
+        // Then, rotate or translate the canvas if needed.
         super.onDraw(canvas);
-        prepareForDrawing(canvas);
+        float canvasW;
+        if (gravity == GRAVITY_TOP_DOWN || gravity == GRAVITY_BOTTOM_UP) {
+             canvasW = canvas.getWidth() + EXTRA_DRAWABLE_REGION_SIZE;
+            prepareForDrawing((int) canvasW, canvas.getHeight());
+        } else {
+            canvasW = canvas.getHeight() + EXTRA_DRAWABLE_REGION_SIZE;
+            prepareForDrawing((int) canvasW, canvas.getWidth());
+        }
+
         if (cachedDensities.length == 0) return;
-        float canvasW = canvas.getWidth();
         float time = duration * progress;
         float baselineY = p1 * time + BASE_LINE_OFFSET;
         float preBaselineY = s1 * time + BASE_LINE_OFFSET;
@@ -233,6 +270,19 @@ public class MeltingView extends View {
             }
         }
 
+        if (gravity != GRAVITY_TOP_DOWN) {
+            if (gravity == GRAVITY_BOTTOM_UP) {
+                canvas.rotate(180, canvas.getWidth()/2, canvas.getHeight()/2);
+            } else if (gravity == GRAVITY_LEFT_TO_RIGHT) {
+                canvas.rotate(-90, 0, 0);
+                canvas.translate(-canvas.getHeight(), 0);
+            } else {
+                // gravity is GRAVITY_RIGHT_TO_LEFT
+                canvas.rotate(90, 0, 0);
+                canvas.translate(0, -canvas.getWidth());
+            }
+        }
+
         // Draw the background.
         canvas.drawColor(backgroundColor);
 
@@ -240,44 +290,46 @@ public class MeltingView extends View {
         if (!disablePreDrawing) {
             paint.setColor(secondaryColor);
             // fixme: Add +10px to the rect to hide unnecessary border line which appears sometimes.
-            canvas.drawRect(0, 0, canvasW, preBaselineY + 10, paint);
+            canvas.drawRect(-EXTRA_DRAWABLE_REGION_SIZE, 0, canvasW, preBaselineY + 10, paint);
             path.reset();
-            pathJoinSegmentsSmoothly(path, secondarySegmentYPositions, 0, preBaselineY);
+            pathJoinSegmentsSmoothly(path, secondarySegmentYPositions, -EXTRA_DRAWABLE_REGION_SIZE, preBaselineY);
             canvas.drawPath(path, paint);
         }
 
         // Draw the melting.
         paint.setColor(primaryColor);
         // fixme: Add +10px to the rect to hide unnecessary border line which appears sometimes.
-        canvas.drawRect(0, 0, canvasW, baselineY + 10, paint);path.reset();
-        pathJoinSegmentsSmoothly(path, segmentYPositions, 0, baselineY);
+        canvas.drawRect(-EXTRA_DRAWABLE_REGION_SIZE, 0, canvasW, baselineY + 10, paint);path.reset();
+        pathJoinSegmentsSmoothly(path, segmentYPositions, -EXTRA_DRAWABLE_REGION_SIZE, baselineY);
         canvas.drawPath(path, paint);
     }
 
+    private boolean wasGravityChanged = false;
     private boolean wasDensityDistProviderChanged = false;
     private boolean wasDurationChanged = false;
     private int cachedCanvasWidth = -1;
     private int cachedCanvasHeight = -1;
 
-    private void prepareForDrawing(Canvas canvas) {
-        if (cachedCanvasWidth != canvas.getWidth() || wasDensityDistProviderChanged) {
+    private void prepareForDrawing(int canvasW, int canvasH) {
+        if (cachedCanvasWidth != canvasW || wasDensityDistProviderChanged || wasGravityChanged) {
             wasDensityDistProviderChanged = false;
-            cachedCanvasWidth = canvas.getWidth();
-            int segmentCount = (int) Math.ceil(cachedCanvasWidth / SEGMENT_WIDTH) + 1;
+            cachedCanvasWidth = canvasW;
+            float availableWidth = cachedCanvasWidth + EXTRA_DRAWABLE_REGION_SIZE;
+            int segmentCount = (int) Math.ceil(availableWidth / SEGMENT_WIDTH) + 1;
             segmentYPositions = new float[segmentCount];
             secondarySegmentYPositions = new float[segmentCount];
 
             cachedDensities = new float[segmentCount];
             float x = SEGMENT_WIDTH_HALF;
             for (int i = 0; i < segmentYPositions.length; ++i, x += SEGMENT_WIDTH) {
-                float density = densityProvider.getDensityAt(x / cachedCanvasWidth);
+                float density = densityProvider.getDensityAt(x / availableWidth);
                 cachedDensities[i] = MathUtils.clamp(density, 0f, 1f);
             }
         }
 
-        if (cachedCanvasHeight != canvas.getHeight() || wasDurationChanged) {
+        if (cachedCanvasHeight != canvasH || wasDurationChanged || wasGravityChanged) {
             wasDurationChanged = false;
-            cachedCanvasHeight = canvas.getHeight();
+            cachedCanvasHeight = canvasH;
             float fCanvasH = (float) cachedCanvasHeight;
             if (duration == 0) return;
             this.p1 = fCanvasH / duration;

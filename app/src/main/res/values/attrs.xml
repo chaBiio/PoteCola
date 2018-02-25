@@ -19,5 +19,11 @@
         <attr name="melting_animation_duration" format="integer"/>
         <attr name="melting_progress" format="float"/>
         <attr name="melting_disable_pre_drawing" format="boolean"/>
+        <attr name="melting_gravity" format="enum">
+            <enum name="top_down" value="1"/>
+            <enum name="bottom_up" value="2"/>
+            <enum name="left_to_right" value="3"/>
+            <enum name="right_to_left" value="4"/>
+        </attr>
     </declare-styleable>
 </resources>
