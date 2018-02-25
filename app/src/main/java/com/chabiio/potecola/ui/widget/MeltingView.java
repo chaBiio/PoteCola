@@ -304,6 +304,7 @@ public class MeltingView extends View {
         canvas.drawPath(path, paint);
     }
 
+    // Used in prepareForDrawing().
     private boolean wasGravityChanged = false;
     private boolean wasDensityDistProviderChanged = false;
     private boolean wasDurationChanged = false;
@@ -340,7 +341,7 @@ public class MeltingView extends View {
     }
 
     // Used in pathJoinSegmentsSmoothly().
-    private static final float DRAWING_METHOD_THRESHOLD = 1f;
+//    private static final float DRAWING_METHOD_THRESHOLD = 1f;
 
     private static void pathJoinSegmentsSmoothly(Path path, float[] segmentYPositions,
                                                  float startX, float startY) {
@@ -355,18 +356,22 @@ public class MeltingView extends View {
                 // fixme:: Use different drawing method depending on the drawing's shape.
                 // The method1 is powerful when draw extended lumps, and it is
                 // better to use the method2 when draw not-extended lump.
-                if (Math.abs(heightDiff / segmentYPositions[i + 1]) > DRAWING_METHOD_THRESHOLD) {
-                    // METHOD1 :: Use two 2d-bezier curve.
-                    float hDiffHalf = heightDiff / 2;
-                    path.rQuadTo(SEGMENT_WIDTH_HALF, 0, SEGMENT_WIDTH_HALF, hDiffHalf);
-                    path.rQuadTo(0, hDiffHalf, SEGMENT_WIDTH_HALF, hDiffHalf);
+//                if (Math.abs(heightDiff / segmentYPositions[i + 1]) > DRAWING_METHOD_THRESHOLD) {
+//                    // METHOD1 :: Use two 2d-bezier curve.
+//                    float hDiffHalf = heightDiff / 2;
+//                    path.rQuadTo(SEGMENT_WIDTH_HALF, 0, SEGMENT_WIDTH_HALF, hDiffHalf);
+//                    path.rQuadTo(0, hDiffHalf, SEGMENT_WIDTH_HALF, hDiffHalf);
+//
+//                } else {
+//                    // METHOD2 :: Use one 3d-bezier curve.
+//                    path.rCubicTo(SEGMENT_WIDTH_HALF, 0,
+//                            SEGMENT_WIDTH_HALF, heightDiff,
+//                            SEGMENT_WIDTH, heightDiff);
+//                }
 
-                } else {
-                    // METHOD2 :: Use one 3d-bezier curve.
-                    path.rCubicTo(SEGMENT_WIDTH_HALF, 0,
-                            SEGMENT_WIDTH_HALF, heightDiff,
-                            SEGMENT_WIDTH, heightDiff);
-                }
+                path.rCubicTo(SEGMENT_WIDTH_HALF, 0,
+                        SEGMENT_WIDTH_HALF, heightDiff,
+                        SEGMENT_WIDTH, heightDiff);
 
             } else {
                 path.rLineTo(SEGMENT_WIDTH, 0);
