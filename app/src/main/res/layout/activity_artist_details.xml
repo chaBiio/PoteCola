@@ -76,7 +76,7 @@
         android:layout_height="48dp"
         android:layout_below="@+id/header"/>
 
-    <!-- menu bar -->
+    <!-- msegment bar -->
 
     <LinearLayout
         android:id="@+id/menu_bar"

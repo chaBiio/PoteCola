@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.chabiio.potecola.ui.PomPomActivity"
+    android:background="#F48FB1">
+
+    <com.chabiio.potecola.ui.widget.MeltingView
+        android:id="@+id/melting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:melting_animation_duration="800"
+        app:melting_progress="0.1" />
+
+    <Button
+        android:id="@+id/anim_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"/>
+
+</FrameLayout>

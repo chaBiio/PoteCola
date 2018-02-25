@@ -12,4 +12,12 @@
         <attr name="ratio_widthRatio" format="integer"/>
         <attr name="ratio_heightRatio" format="integer"/>
     </declare-styleable>
+    
+    <declare-styleable name="MeltingView">
+        <attr name="melting_primary_color" format="color"/>
+        <attr name="melting_secondary_color" format="color"/>
+        <attr name="melting_animation_duration" format="integer"/>
+        <attr name="melting_progress" format="float"/>
+        <attr name="melting_disable_pre_drawing" format="boolean"/>
+    </declare-styleable>
 </resources>
