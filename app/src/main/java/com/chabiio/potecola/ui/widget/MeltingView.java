@@ -15,6 +15,7 @@ import android.support.annotation.Px;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.math.MathUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
@@ -41,6 +42,7 @@ public class MeltingView extends View {
     @IntDef({GRAVITY_TOP_DOWN, GRAVITY_BOTTOM_UP, GRAVITY_LEFT_TO_RIGHT, GRAVITY_RIGHT_TO_LEFT})
     public @interface Gravity {}
 
+    @Px private static final int DEFAULT_SEGMENT_WIDTH = 140;
     @ColorInt private static final int DEFAULT_PRIMARY_COLOR = Color.WHITE;
     @Gravity private static final int DEFAULT_GRAVITY = GRAVITY_TOP_DOWN;
     private static final int DEFAULT_DURATION = 500;
@@ -57,6 +59,8 @@ public class MeltingView extends View {
     @ColorInt private int primaryColor;
     @ColorInt private int backgroundColor;
     @Gravity private int gravity = DEFAULT_GRAVITY;
+    @Px private int segmentWidth = DEFAULT_SEGMENT_WIDTH;
+    @Px private int segmentWidthHalf = segmentWidth / 2;
 
     public MeltingView(Context context) {
         this(context, null);
@@ -93,6 +97,7 @@ public class MeltingView extends View {
             duration = ta.getInteger(R.styleable.MeltingView_melting_animation_duration, DEFAULT_DURATION);
             disablePreDrawing = ta.getBoolean(R.styleable.MeltingView_melting_disable_pre_drawing, false);
             setProgress(ta.getFloat(R.styleable.MeltingView_melting_progress, DEFAULT_PROGRESS));
+            setSegmentWidth(ta.getDimensionPixelSize(R.styleable.MeltingView_melting_segment_width, DEFAULT_SEGMENT_WIDTH), false);
         } finally {
             ta.recycle();
         }
@@ -200,6 +205,15 @@ public class MeltingView extends View {
         return gravity;
     }
 
+    public void setSegmentWidth(@Px int px, boolean forceUpdate) {
+        if (segmentWidth != px) {
+            segmentWidth = Math.max(1, px);
+            segmentWidthHalf = segmentWidth / 2;
+            wasSegmentWidthChanged = true;
+            if (forceUpdate) invalidate();
+        }
+    }
+
     public void disablePreDrawing(boolean disable) {
         boolean forceUpdate = disable != disablePreDrawing;
         disablePreDrawing = disable;
@@ -230,9 +244,9 @@ public class MeltingView extends View {
     private static final float MIN_DURATION_RATE_SECONDARY = 0.3f;
     private static final float DURATION_RATE_SECONDARY = 0.65f;
     @Px private static final int BASE_LINE_OFFSET = -20;
-    @Px private static final int SEGMENT_WIDTH = 180;
     @Px private static final int EXTRA_DRAWABLE_REGION_SIZE = 20;
-    @Px private static final int SEGMENT_WIDTH_HALF = SEGMENT_WIDTH / 2;
+    //    @Px private static final int SEGMENT_WIDTH = 120;
+//    @Px private static final int SEGMENT_WIDTH_HALF = SEGMENT_WIDTH / 2;
 
     private float[] segmentYPositions;
     private float[] secondarySegmentYPositions;
@@ -305,6 +319,7 @@ public class MeltingView extends View {
     }
 
     // Used in prepareForDrawing().
+    private boolean wasSegmentWidthChanged = false;
     private boolean wasGravityChanged = false;
     private boolean wasDensityDistProviderChanged = false;
     private boolean wasDurationChanged = false;
@@ -312,17 +327,23 @@ public class MeltingView extends View {
     private int cachedCanvasHeight = -1;
 
     private void prepareForDrawing(int canvasW, int canvasH) {
-        if (cachedCanvasWidth != canvasW || wasDensityDistProviderChanged || wasGravityChanged) {
+        if (cachedCanvasWidth != canvasW ||
+                wasDensityDistProviderChanged ||
+                wasGravityChanged ||
+                wasSegmentWidthChanged) {
+
             wasDensityDistProviderChanged = false;
+            wasGravityChanged = false;
+            wasSegmentWidthChanged = false;
             cachedCanvasWidth = canvasW;
             float availableWidth = cachedCanvasWidth + EXTRA_DRAWABLE_REGION_SIZE;
-            int segmentCount = (int) Math.ceil(availableWidth / SEGMENT_WIDTH) + 1;
+            int segmentCount = (int) Math.ceil(availableWidth / segmentWidth) + 1;
             segmentYPositions = new float[segmentCount];
             secondarySegmentYPositions = new float[segmentCount];
 
             cachedDensities = new float[segmentCount];
-            float x = SEGMENT_WIDTH_HALF;
-            for (int i = 0; i < segmentYPositions.length; ++i, x += SEGMENT_WIDTH) {
+            float x = segmentWidthHalf;
+            for (int i = 0; i < segmentYPositions.length; ++i, x += segmentWidth) {
                 float density = densityProvider.getDensityAt(x / availableWidth);
                 cachedDensities[i] = MathUtils.clamp(density, 0f, 1f);
             }
@@ -330,6 +351,7 @@ public class MeltingView extends View {
 
         if (cachedCanvasHeight != canvasH || wasDurationChanged || wasGravityChanged) {
             wasDurationChanged = false;
+            wasGravityChanged = false;
             cachedCanvasHeight = canvasH;
             float fCanvasH = (float) cachedCanvasHeight;
             if (duration == 0) return;
@@ -343,12 +365,12 @@ public class MeltingView extends View {
     // Used in pathJoinSegmentsSmoothly().
 //    private static final float DRAWING_METHOD_THRESHOLD = 1f;
 
-    private static void pathJoinSegmentsSmoothly(Path path, float[] segmentYPositions,
+    private void pathJoinSegmentsSmoothly(Path path, float[] segmentYPositions,
                                                  float startX, float startY) {
 
         if (segmentYPositions.length == 0) return;
         path.moveTo(startX, startY);
-        path.rQuadTo(0, segmentYPositions[0], SEGMENT_WIDTH_HALF, segmentYPositions[0]);
+        path.rQuadTo(0, segmentYPositions[0], segmentWidthHalf, segmentYPositions[0]);
 
         for (int i = 0; i < segmentYPositions.length - 1; ++i) {
             float heightDiff = segmentYPositions[i + 1] - segmentYPositions[i];
@@ -359,27 +381,27 @@ public class MeltingView extends View {
 //                if (Math.abs(heightDiff / segmentYPositions[i + 1]) > DRAWING_METHOD_THRESHOLD) {
 //                    // METHOD1 :: Use two 2d-bezier curve.
 //                    float hDiffHalf = heightDiff / 2;
-//                    path.rQuadTo(SEGMENT_WIDTH_HALF, 0, SEGMENT_WIDTH_HALF, hDiffHalf);
-//                    path.rQuadTo(0, hDiffHalf, SEGMENT_WIDTH_HALF, hDiffHalf);
+//                    path.rQuadTo(segmentWidthHalf, 0, segmentWidthHalf, hDiffHalf);
+//                    path.rQuadTo(0, hDiffHalf, segmentWidthHalf, hDiffHalf);
 //
 //                } else {
 //                    // METHOD2 :: Use one 3d-bezier curve.
-//                    path.rCubicTo(SEGMENT_WIDTH_HALF, 0,
-//                            SEGMENT_WIDTH_HALF, heightDiff,
-//                            SEGMENT_WIDTH, heightDiff);
+//                    path.rCubicTo(segmentWidthHalf, 0,
+//                            segmentWidthHalf, heightDiff,
+//                            segmentWidth, heightDiff);
 //                }
 
-                path.rCubicTo(SEGMENT_WIDTH_HALF, 0,
-                        SEGMENT_WIDTH_HALF, heightDiff,
-                        SEGMENT_WIDTH, heightDiff);
+                path.rCubicTo(segmentWidthHalf, 0,
+                        segmentWidthHalf, heightDiff,
+                        segmentWidth, heightDiff);
 
             } else {
-                path.rLineTo(SEGMENT_WIDTH, 0);
+                path.rLineTo(segmentWidth, 0);
             }
         }
 
-        path.rQuadTo(SEGMENT_WIDTH_HALF, 0,
-                SEGMENT_WIDTH_HALF, -segmentYPositions[segmentYPositions.length - 1]);
+        path.rQuadTo(segmentWidthHalf, 0,
+                segmentWidthHalf, -segmentYPositions[segmentYPositions.length - 1]);
     }
 
     private static class MeltingAnimation extends Animation {
@@ -425,7 +447,12 @@ public class MeltingView extends View {
             MeltingView.DensityDistributionProvider {
         @Override
         public float getDensityAt(float x) {
-            return 0.5f + (float) (0.5f * Math.sin(2*Math.PI*x));
+            double pix = Math.PI * x;
+            return (float) (
+                    0.2 +
+                    0.13*Math.sin(pix) +
+                    0.1*Math.sin(4*pix) +
+                    0.1*Math.sin(10*(pix-Math.PI*0.15)));
         }
     }
 

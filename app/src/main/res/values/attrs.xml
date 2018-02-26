@@ -19,6 +19,7 @@
         <attr name="melting_animation_duration" format="integer"/>
         <attr name="melting_progress" format="float"/>
         <attr name="melting_disable_pre_drawing" format="boolean"/>
+        <attr name="melting_segment_width" format="dimension"/>
         <attr name="melting_gravity" format="enum">
             <enum name="top_down" value="1"/>
             <enum name="bottom_up" value="2"/>
